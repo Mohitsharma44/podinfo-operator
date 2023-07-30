@@ -1,0 +1,7 @@
+kopf[full-auth,uvloop]==1.36.2
+kubernetes==27.2.0
+PyYAML==6.0.1
+PyYAML==6.0.1
+redis==4.6.0
+Requests==2.31.0
+urllib3==1.26.16

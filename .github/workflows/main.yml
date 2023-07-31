@@ -1,0 +1,41 @@
+name: Run Tests
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - 'main'
+    - 'dev'
+  pull_request:
+    types: [opened, edited, reopened]
+
+jobs:
+  create-cluster:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          
+      - name: Download and install kind
+        run: |
+          curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+          chmod +x ./kind
+          sudo mv ./kind /usr/local/bin/kind
+        
+      - name: Setup Python3
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+        
+      - name: Run unit tests
+        run: ./run.sh unit_test
+        
+      - name: Run e2e tests
+        run: ./run.sh e2e_test
+        

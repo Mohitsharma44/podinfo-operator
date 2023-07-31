@@ -1,5 +1,7 @@
 # PodInfo Operator
 
+![Tests](https://github.com/mohitsharma44/podinfo-operator/actions/workflows/main.yml/badge.svg)
+
 This repository contains an operator implementation for managing `MyAppResource` custom resources in a Kubernetes cluster. 
 The operator handles the creation and management of the [PodInfo](https://github.com/stefanprodan/podinfo) and [Redis](https://hub.docker.com/_/redis) deployment and their corresponding services based on the provided specifications in the custom resource.
 

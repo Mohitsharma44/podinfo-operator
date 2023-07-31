@@ -99,7 +99,7 @@ cleanup() {
 
 ## Show help information for the script.
 show_help() {
-  echo -e "${COLOR_INFO}Usage: script.sh [command]${COLOR_RESET}"
+  echo -e "${COLOR_INFO}Usage: run.sh [command]${COLOR_RESET}"
   echo ""
   echo -e "${COLOR_INFO}Commands:${COLOR_RESET}"
   echo -e "${COLOR_DEBUG}  create_cluster     ${COLOR_RESET}Spin up a Kind cluster."

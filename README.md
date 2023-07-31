@@ -5,6 +5,8 @@ The operator handles the creation and management of the [PodInfo](https://github
 
 - [PodInfo Operator](#podinfo-operator)
   - [Instructions](#instructions)
+    - [Using run.sh script](#using-runsh-script)
+    - [Manually](#manually)
   - [Usage](#usage)
   - [Cleanup](#cleanup)
   - [Development](#development)
@@ -20,13 +22,13 @@ Before you begin, you'll need the following installed on your MacOS/ Linux machi
 
 Once you have installed the above two dependencies, you can use the `./run.sh` convenience script or checkout manual steps.
 
-**Using run.sh script**
+### Using run.sh script
 
 This operator comes with a handy bash script aptly named `run.sh` that you can use to:
 
 ```bash
 ❯❯❯ ./run.sh
-Usage: script.sh [command]
+Usage: run.sh [command]
 
 Commands:
   create_cluster     Spin up a Kind cluster.
@@ -37,7 +39,7 @@ Commands:
   cleanup            Cleanup the operator and delete the Kind cluster
 ```
 
-**Manually**
+### Manually
 
 1. Create a kind cluster
    ```bash

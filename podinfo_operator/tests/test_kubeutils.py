@@ -6,7 +6,12 @@ from kubernetes import client
 from kubernetes.client import ApiException
 from utils import PrettyPrintTextTestRunner
 
-TOP_LEVEL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..",))
+TOP_LEVEL_DIR = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        "..",
+    )
+)
 sys.path.append(TOP_LEVEL_DIR)
 
 from kubeutils import (
@@ -16,7 +21,7 @@ from kubeutils import (
     get_deployment,
     create_service_object,
     create_or_update_deployment,
-    create_or_update_service
+    create_or_update_service,
 )
 
 
@@ -54,10 +59,14 @@ class TestKubeUtils(unittest.TestCase):
 
     @patch("kubernetes.client.AppsV1Api.create_namespaced_deployment")
     def test_create_deployment(self, mock_create_namespaced_deployment):
-        mocked_deployment_obj = client.V1Deployment(metadata=client.V1ObjectMeta(name="my-deployment"))
+        mocked_deployment_obj = client.V1Deployment(
+            metadata=client.V1ObjectMeta(name="my-deployment")
+        )
         mock_create_namespaced_deployment.return_value = mocked_deployment_obj
-        deployment_result = create_or_update_deployment("my-deployment", mocked_deployment_obj, self.namespace)
-        
+        deployment_result = create_or_update_deployment(
+            "my-deployment", mocked_deployment_obj, self.namespace
+        )
+
         # Assertions
         self.assertEqual(deployment_result, mocked_deployment_obj)
         mock_create_namespaced_deployment.assert_called_once_with(
@@ -66,15 +75,19 @@ class TestKubeUtils(unittest.TestCase):
 
     @patch("kubernetes.client.AppsV1Api.patch_namespaced_deployment")
     def test_update_deployment(self, mock_patch_namespaced_deployment):
-        mocked_deployment_obj = client.V1Deployment(metadata=client.V1ObjectMeta(name="my-deployment"))
+        mocked_deployment_obj = client.V1Deployment(
+            metadata=client.V1ObjectMeta(name="my-deployment")
+        )
         mock_patch_namespaced_deployment.return_value = mocked_deployment_obj
         api_exception = ApiException(status=409)
         with patch(
             "kubernetes.client.AppsV1Api.create_namespaced_deployment",
             side_effect=api_exception,
         ) as mock_create_namespaced_deployment:
-            deployment_result = create_or_update_deployment("my-deployment", mocked_deployment_obj, self.namespace)
-            
+            deployment_result = create_or_update_deployment(
+                "my-deployment", mocked_deployment_obj, self.namespace
+            )
+
             # Assertions
             self.assertEqual(deployment_result, mocked_deployment_obj)
             mock_create_namespaced_deployment.assert_called_once_with(
@@ -88,12 +101,18 @@ class TestKubeUtils(unittest.TestCase):
 
     @patch("kubernetes.client.CoreV1Api.create_namespaced_service")
     @patch("kubernetes.client.CoreV1Api.patch_namespaced_service")
-    def test_create_or_update_service(self, mock_create_namespaced_service, mock_patch_namespaced_service):
+    def test_create_or_update_service(
+        self, mock_create_namespaced_service, mock_patch_namespaced_service
+    ):
         mock_create_namespaced_service.return_value = client.V1Status()
         mock_patch_namespaced_service.return_value = client.V1Status()
 
-        mocked_service_obj = client.V1Service(metadata=client.V1ObjectMeta(name="my-service"))
-        status = create_or_update_service("my-service", mocked_service_obj, self.namespace)
+        mocked_service_obj = client.V1Service(
+            metadata=client.V1ObjectMeta(name="my-service")
+        )
+        status = create_or_update_service(
+            "my-service", mocked_service_obj, self.namespace
+        )
 
         self.assertIsInstance(status, client.V1Status)
 
@@ -131,7 +150,7 @@ class TestKubeUtils(unittest.TestCase):
             mock_delete_namespaced_deployment.assert_called_once_with(
                 name="my-deployment", namespace=self.namespace
             )
-    
+
     @patch("kubernetes.client.AppsV1Api.delete_namespaced_deployment")
     def test_teardown_deployment_error(self, mock_delete_namespaced_deployment):
         # Create a fake ApiException with a status code other than 404
@@ -161,9 +180,9 @@ class TestKubeUtils(unittest.TestCase):
         # Assertions
         self.assertIsInstance(status, client.V1Status)
         mock_delete_namespaced_service.assert_called_once_with(
-                name="my-service", namespace=self.namespace
-            )
-    
+            name="my-service", namespace=self.namespace
+        )
+
     @patch("kubernetes.client.CoreV1Api.delete_namespaced_service")
     def test_teardown_service_not_found(self, mock_delete_namespaced_service):
         # Create a fake ApiException with status code 404 to simulate the service not found

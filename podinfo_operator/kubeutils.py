@@ -6,11 +6,11 @@ from kubernetes.client import ApiException
 try:
     # outside k8s
     config.load_kube_config()
-except config.config_exception.ConfigException: # pragma: no cover
+except config.config_exception.ConfigException:  # pragma: no cover
     try:
         # inside a k8s pod
         config.load_incluster_config()
-    except config.config_exception.ConfigException: # pragma: no cover
+    except config.config_exception.ConfigException:  # pragma: no cover
         raise Exception("Could not configure kubernetes python client")
 
 

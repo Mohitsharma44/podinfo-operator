@@ -28,10 +28,18 @@ class TestPodInfoOperator(unittest.TestCase):
     @patch("kopf.adopt")
     @patch("kubernetes.client.AppsV1Api.create_namespaced_deployment")
     @patch("kubernetes.client.CoreV1Api.create_namespaced_service")
-    def test_create_deployment_and_service(self, mock_create_namespaced_service, mock_create_namespaced_deployment, mock_kopf_adopt):
+    def test_create_deployment_and_service(
+        self,
+        mock_create_namespaced_service,
+        mock_create_namespaced_deployment,
+        mock_kopf_adopt,
+    ):
         # Set up mock deployment and service creation
         mock_create_namespaced_deployment.return_value = client.V1Deployment(
-            metadata=client.V1ObjectMeta(uid="my-uid", creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213))
+            metadata=client.V1ObjectMeta(
+                uid="my-uid",
+                creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213),
+            )
         )
         mock_create_namespaced_service.return_value = client.V1Service()
 
@@ -39,7 +47,9 @@ class TestPodInfoOperator(unittest.TestCase):
         mock_kopf_adopt.__exit__ = MagicMock()
 
         # Call the create_deployment_and_service function using KopfRunner
-        with KopfRunner(['run', '--namespace', self.namespace, self.operator_file]) as runner:
+        with KopfRunner(
+            ["run", "--namespace", self.namespace, self.operator_file]
+        ) as runner:
             spec = {
                 "image": {"repository": "myrepo", "tag": "latest"},
                 "replicaCount": 3,
@@ -72,7 +82,9 @@ class TestPodInfoOperator(unittest.TestCase):
         mock_delete_namespaced_service.return_value = client.V1Status()
 
         # Call the teardown_service function using KopfRunner
-        with KopfRunner(['run', '--namespace', self.namespace, self.operator_file]) as runner:
+        with KopfRunner(
+            ["run", "--namespace", self.namespace, self.operator_file]
+        ) as runner:
             status = teardown_service("my-service", self.namespace)
 
         # Assertions (you may add more assertions depending on the logic)
@@ -84,7 +96,9 @@ class TestPodInfoOperator(unittest.TestCase):
         mock_delete_namespaced_deployment.return_value = client.V1Status()
 
         # Call the teardown_deployment function using KopfRunner
-        with KopfRunner(['run', '--namespace', self.namespace, self.operator_file]) as runner:
+        with KopfRunner(
+            ["run", "--namespace", self.namespace, self.operator_file]
+        ) as runner:
             status = teardown_deployment("my-deployment", self.namespace)
 
         # Assertions (you may add more assertions depending on the logic)
@@ -102,7 +116,9 @@ class TestPodInfoOperator(unittest.TestCase):
         mock_list_namespaced_deployment.return_value.items = mocked_deployments
 
         # Call the get_deployment function using KopfRunner
-        with KopfRunner(['run', '--namespace', self.namespace, self.operator_file]) as runner:
+        with KopfRunner(
+            ["run", "--namespace", self.namespace, self.operator_file]
+        ) as runner:
             deployment = get_deployment("my-deployment", self.namespace)
 
         # Assert that the deployment is an instance of client.V1Deployment and has the correct name
@@ -118,7 +134,9 @@ class TestPodInfoOperator(unittest.TestCase):
         mock_list_namespaced_deployment.return_value.items = mocked_deployments
 
         # Call the get_deployment function using KopfRunner when no deployments are found
-        with KopfRunner(['run', '--namespace', self.namespace, self.operator_file]) as runner:
+        with KopfRunner(
+            ["run", "--namespace", self.namespace, self.operator_file]
+        ) as runner:
             deployment = get_deployment("non-existent-deployment", self.namespace)
 
         # Assert that the deployment is None since it was not found
@@ -129,14 +147,27 @@ class TestPodInfoOperator(unittest.TestCase):
     @patch("kubernetes.client.CoreV1Api.create_namespaced_service")
     @patch("kubeutils.create_deployment_object")
     @patch("kubeutils.create_service_object")
-    def test_create_podinfo_deployment_and_service(self, mock_create_namespaced_deployment, mock_create_namespaced_service, mock_create_service_object, mock_create_deployment_object, mock_kopf_adopt):
+    def test_create_podinfo_deployment_and_service(
+        self,
+        mock_create_namespaced_deployment,
+        mock_create_namespaced_service,
+        mock_create_service_object,
+        mock_create_deployment_object,
+        mock_kopf_adopt,
+    ):
         # Set up mock deployment and service creation
         mock_create_namespaced_deployment.return_value = client.V1Deployment(
-            metadata=client.V1ObjectMeta(uid="my-uid", creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213))
+            metadata=client.V1ObjectMeta(
+                uid="my-uid",
+                creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213),
+            )
         )
         mock_create_namespaced_service.return_value = client.V1Service()
         mock_create_deployment_object.return_value = client.V1Deployment(
-            metadata=client.V1ObjectMeta(uid="my-uid", creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213))
+            metadata=client.V1ObjectMeta(
+                uid="my-uid",
+                creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213),
+            )
         )
         mock_create_service_object.return_value = client.V1Service()
 
@@ -144,7 +175,9 @@ class TestPodInfoOperator(unittest.TestCase):
         mock_kopf_adopt.__exit__ = MagicMock()
 
         # Call the create_podinfo_deployment_and_service function using KopfRunner
-        with KopfRunner(['run', '--namespace', self.namespace, self.operator_file]) as runner:
+        with KopfRunner(
+            ["run", "--namespace", self.namespace, self.operator_file]
+        ) as runner:
             spec = {
                 "image": {"repository": "myrepo", "tag": "latest"},
                 "replicaCount": 3,
@@ -167,22 +200,37 @@ class TestPodInfoOperator(unittest.TestCase):
     @patch("kubernetes.client.CoreV1Api.create_namespaced_service")
     @patch("kubeutils.create_deployment_object")
     @patch("kubeutils.create_service_object")
-    def test_create_redis_deployment_and_service(self, mock_create_namespaced_deployment, mock_create_namespaced_service, mock_create_service_object, mock_create_deployment_object, mock_kopf_adopt):
+    def test_create_redis_deployment_and_service(
+        self,
+        mock_create_namespaced_deployment,
+        mock_create_namespaced_service,
+        mock_create_service_object,
+        mock_create_deployment_object,
+        mock_kopf_adopt,
+    ):
         # Set up mock deployment and service creation
         mock_create_namespaced_deployment.return_value = client.V1Deployment(
-            metadata=client.V1ObjectMeta(uid="my-uid", creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213))
+            metadata=client.V1ObjectMeta(
+                uid="my-uid",
+                creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213),
+            )
         )
         mock_create_namespaced_service.return_value = client.V1Service()
         mock_create_deployment_object.return_value = client.V1Deployment(
-            metadata=client.V1ObjectMeta(uid="my-uid", creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213))
+            metadata=client.V1ObjectMeta(
+                uid="my-uid",
+                creation_timestamp=datetime.datetime(2023, 7, 29, 1, 8, 24, 508213),
+            )
         )
         mock_create_service_object.return_value = client.V1Service()
-        
+
         mock_kopf_adopt.__enter__ = MagicMock()
         mock_kopf_adopt.__exit__ = MagicMock()
 
         # Call the create_redis_deployment_and_service function using KopfRunner
-        with KopfRunner(['run', '--namespace', self.namespace, self.operator_file]) as runner:
+        with KopfRunner(
+            ["run", "--namespace", self.namespace, self.operator_file]
+        ) as runner:
             spec = {
                 "image": {"repository": "redis", "tag": "7.0.12"},
                 "replicaCount": 1,
@@ -198,6 +246,7 @@ class TestPodInfoOperator(unittest.TestCase):
             "uid": "my-uid",
         }
         self.assertEqual(status, expected_status)
+
 
 if __name__ == "__main__":  # pragma: no cover
     unittest.main(testRunner=PrettyPrintTextTestRunner(verbosity=0))

@@ -62,4 +62,3 @@ class PrettyPrintTextTestRunner(unittest.TextTestRunner):
         result = super(PrettyPrintTextTestRunner, self)._makeResult()
         result.test_case_count = self.test_case_count
         return result
-

@@ -141,22 +141,21 @@ class E2e(unittest.TestCase):
         cls.test_namespace = f"podinfo-e2e-{int(time.time())}"
         cls.cleanup_tasks = []
         api_core = client.CoreV1Api()
-        ns_body = client.V1Namespace(metadata=client.V1ObjectMeta(name=cls.test_namespace))
+        ns_body = client.V1Namespace(
+            metadata=client.V1ObjectMeta(name=cls.test_namespace)
+        )
         try:
             api_core.create_namespace(ns_body)
         except ApiException as ex:
             if not ex.status == 409:
                 raise
-        cls.cleanup_tasks.append(
-            lambda: api_core.delete_namespace(cls.test_namespace)
-        )
+        cls.cleanup_tasks.append(lambda: api_core.delete_namespace(cls.test_namespace))
 
     @classmethod
     def tearDownClass(cls):
         print("Cleaning up resources...")
         for cleanup_task in cls.cleanup_tasks[::-1]:
             cleanup_task()
-
 
     def test_01_create_crd(self):
         # Test case to create a custom resource definition
@@ -494,7 +493,9 @@ class E2e(unittest.TestCase):
             cr_dict = yaml.safe_load(fh)
 
         if service_ready:
-            redis_client = redis.StrictRedis(host="127.0.0.1", port=local_port, decode_responses=True)
+            redis_client = redis.StrictRedis(
+                host="127.0.0.1", port=local_port, decode_responses=True
+            )
             test_key = "foo"
             test_value = "bar"
             redis_client.set(test_key, test_value)
@@ -503,7 +504,9 @@ class E2e(unittest.TestCase):
             # Check if the response status code is 200
             self.assertEqual(test_value, got_value)
         else:
-            self.fail("There is a mismatch in what we stored in redis and the value we received back.")
+            self.fail(
+                "There is a mismatch in what we stored in redis and the value we received back."
+            )
 
         self.port_forward_process.terminate()
 
